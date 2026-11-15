@@ -1,6 +1,12 @@
 import unittest
 from binary_tree_lab import TreeNode, max_depth, lowest_common_ancestor
 
+# Display a formatted header to distinguish the test suite output
+# from other terminal messages
+print ('**********************************')
+print('Starting Test Suite')
+print ('**********************************\n')
+
 class TestBinaryTreeFunctions(unittest.TestCase):
 
     def test_max_depth(self):

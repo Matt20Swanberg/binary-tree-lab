@@ -1,147 +1,331 @@
 # Lab: Binary Trees – Depth and Ancestors
 
-**Lab GitHub Repo**: [Binary Tree Lab](https://github.com/learn-co-curriculum/binary-tree-lab)
-
----
-
 ## Overview
 
-In this lab, you'll implement two classic binary tree problems commonly seen in technical interviews and real-world applications:
+This project implements two fundamental binary tree algorithms using Python and recursion:
 
-1. **Maximum Depth of a Binary Tree**  
-   Measure how deep a binary tree goes from root to leaf.
+1. **Maximum Depth of a Binary Tree** – Calculates the longest path from the root node to a leaf node
+2. **Lowest Common Ancestor of a Binary Search Tree** – Identifies the deepest shared ancestor of two nodes in a Binary Search Tree (BST)
 
-2. **Lowest Common Ancestor of a Binary Search Tree**  
-   Given two nodes in a BST, find the node that is their lowest shared ancestor.
+The lab focuses on recursive tree traversal, binary search tree properties, and efficient algorithm design.
 
-These problems will strengthen your understanding of:
+## Learning Objectives
 
-- Tree traversal using recursion
-- Node comparison and relationships
-- Constructing and navigating binary trees
+- Understand the structure and properties of binary trees
+- Implement recursive algorithms for tree traversal
+- Calculate the maximum depth of a binary tree
+- Find the lowest common ancestor of two nodes in a BST
+- Analyze time and space complexity using Big O notation
+- Validate implementations using Python's `unittest` framework
 
----
+## Project Structure
 
-## Task 1: Define the Problem
+```text
+binary-tree-lab/
+├── binary_tree_lab.py
+├── binary_tree_tests.py
+├── README.md
+└── screenshots/
+    └── test_suite.png
+```
 
-### Problem 1: Maximum Depth
+### File Descriptions
 
-- Implement a function that returns the maximum depth of a binary tree.
-- This involves finding the longest path from the root to any leaf.
+- `binary_tree_lab.py` – Contains the TreeNode class and both recursive algorithms
+- `binary_tree_tests.py` – Contains unit tests for maximum depth and lowest common ancestor
+- `README.md` – Project documentation, setup instructions, and algorithm explanations
+- `screenshots/` – Contains screenshots demonstrating successful test execution
 
-### Problem 2: Lowest Common Ancestor (BST)
+## Technologies Used
 
-- Implement a function that returns the **lowest common ancestor** of two given nodes in a Binary Search Tree (BST).
-- An ancestor of a node is any node on the path from the root to that node (including the node itself).
+- Python 3
+- Python `typing` module
+- Python `unittest` framework
+- Git and GitHub
 
----
+## Getting Started
 
-## Task 2: Determine the Design
+### 1. Clone the Repository
 
-You will be working with the following files:
+```bash
+git clone https://github.com/Matt20Swanberg/binary-tree-lab
+cd binary-tree-lab
+```
 
-### `binary_tree_lab.py`
+### 2. Verify Python Installation
 
-You will implement:
+Ensure Python 3 is installed:
 
-- `max_depth(root: Optional[TreeNode]) -> int`
-- `lowest_common_ancestor(root: TreeNode, p: TreeNode, q: TreeNode) -> TreeNode`
+```bash
+python --version
+```
 
-The `TreeNode` class is already defined for you with `val`, `left`, and `right`.
+### 3. Run the Test Suite
 
-### `binary_tree_tests.py`
-
-This file contains unit tests to validate your implementations. You do not need to modify this file.
-
----
-
-## 🛠 Task 3: Develop, Test, and Refine the Code
-
-### Setup
-
-1. **Fork and Clone**
-   ```bash
-   git clone https://github.com/your-org/binary-tree-lab.git
-   cd binary-tree-lab
-
-## Open and Run
-
-Open the project in your Python-friendly IDE (such as VSCode, PyCharm, or Replit).
-
----
-
-## Implementation Details
-
-The starter code includes function definitions for `max_depth` and `lowest_common_ancestor`, each containing a `pass` statement. These placeholders indicate where you should implement your logic.
-
-### Steps to Implement
-
-#### 1. Locate the Functions
-
-- Open the `binary_tree_lab.py` file.
-- Find the `max_depth` and `lowest_common_ancestor` functions.
-
-#### 2. Understand the Objectives
-
-**`max_depth(root: Optional[TreeNode]) -> int`**
-
-- Goal: Determine the maximum depth (height) of a binary tree.
-- Definition: Depth is the number of nodes along the longest path from the root node down to the farthest leaf node.
-
-**`lowest_common_ancestor(root: TreeNode, p: TreeNode, q: TreeNode) -> TreeNode`**
-
-- Goal: Find the lowest common ancestor (LCA) of two nodes in a Binary Search Tree (BST).
-- Definition: The LCA is the deepest node that has both `p` and `q` as descendants (a node can be a descendant of itself).
-
-#### 3. Implement the Logic
-
-**`max_depth`**
-
-- Use a recursive approach.
-- At each node, compute the depth of the left and right subtrees.
-- Return the greater of the two, plus one.
-
-**`lowest_common_ancestor`**
-
-- Leverage the properties of a BST:
-  - If both `p` and `q` are less than the current node, recurse into the left subtree.
-  - If both are greater, recurse into the right subtree.
-  - Otherwise, the current node is the lowest common ancestor.
-
----
-
-## Run Tests
-
-To validate your code, run the test suite with:
+Execute the provided tests:
 
 ```bash
 python binary_tree_tests.py
 ```
-Make sure all tests pass before submission.
 
-4. **Push and Merge**:
-   - Commit your work regularly.
-   - Push to your feature branch.
-   - Open a Pull Request (PR).
-   - Merge to `main` after review.
+No third-party dependencies are required.
 
----
+## Implementation Details
 
-## Task 4: Document and Maintain
+### 1. TreeNode Class
 
-### Best Practice Documentation Steps
+The `TreeNode` class represents an individual node within a binary tree.
 
-- **Comment your logic**: Especially around recursive or loop-based behavior.
-- **Explain your thinking** in your function definitions.
-- **README**: Make sure your repo’s README includes how to run the project.
-- **Clean Up**:
-  - Remove debug prints.
-  - Ensure your `.gitignore` ignores `.pyc`, `__pycache__`, etc.
+Each node contains:
 
----
+- `val` – Integer value stored in the node
+- `left` – Reference to the left child node
+- `right` – Reference to the right child node
 
-## Submission
-Once your lab is complete and all tests are passing:
+```python
+class TreeNode:
+    def __init__(self, val: int):
+        self.val = val
+        self.left: Optional['TreeNode'] = None
+        self.right: Optional['TreeNode'] = None
+```
 
-- Push your code to GitHub.
-- Submit the link to your repo through **Canvas using CodeGrade**.
+The left and right child references are initialized to `None`.
+
+### 2. Maximum Depth of a Binary Tree
+
+**Function:** `max_depth(root)`
+
+Calculates the maximum depth of a binary tree by determining the longest path from the root to a leaf node.
+
+#### Algorithm
+
+1. Check whether the current node is `None`
+2. Return `0` if the tree is empty
+3. Recursively calculate the depth of the left subtree
+4. Recursively calculate the depth of the right subtree
+5. Return the greater depth plus `1` for the current node
+
+#### Implementation
+
+```python
+def max_depth(root: Optional[TreeNode]) -> int:
+    if root is None:
+        return 0
+
+    left_depth = max_depth(root.left)
+    right_depth = max_depth(root.right)
+
+    return max(left_depth, right_depth) + 1
+```
+
+#### Example
+
+```text
+       3
+      / \
+     9   20
+        /  \
+       15   7
+```
+
+The longest path contains three nodes:
+
+```text
+3 → 20 → 15
+```
+
+**Expected Output:**
+
+```python
+3
+```
+
+### 3. Lowest Common Ancestor of a Binary Search Tree
+
+**Function:** `lowest_common_ancestor(root, p, q)`
+
+Finds the deepest node that is an ancestor of both target nodes in a Binary Search Tree.
+
+A node may also be considered an ancestor of itself.
+
+#### Binary Search Tree Properties
+
+A Binary Search Tree follows these rules:
+
+- Values in the left subtree are smaller than the current node
+- Values in the right subtree are greater than the current node
+
+These properties allow the algorithm to search only one subtree at a time.
+
+#### Algorithm
+
+1. Compare the target node values against the current node
+2. If both target values are smaller, recursively search the left subtree
+3. If both target values are greater, recursively search the right subtree
+4. Otherwise, return the current node as the lowest common ancestor
+
+The implementation assumes both target nodes exist in the BST and node values are unique.
+
+#### Implementation
+
+```python
+def lowest_common_ancestor(
+    root: TreeNode, p: TreeNode, q: TreeNode
+) -> TreeNode:
+
+    if root.val > p.val and root.val > q.val:
+        return lowest_common_ancestor(root.left, p, q)
+
+    elif root.val < p.val and root.val < q.val:
+        return lowest_common_ancestor(root.right, p, q)
+
+    return root
+```
+
+#### Example
+
+```text
+        6
+       / \
+      2   8
+     / \ / \
+    0  4 7  9
+      / \
+     3   5
+```
+
+Given:
+
+```python
+p = 3
+q = 5
+```
+
+Both nodes share node `4` as their lowest common ancestor.
+
+**Expected Output:**
+
+```python
+4
+```
+
+## Testing
+
+The project uses Python's built-in `unittest` framework.
+
+The test suite validates both recursive algorithms across seven scenarios organized into two test methods.
+
+### Maximum Depth Tests
+
+| Test Case | Expected Result |
+|---|---|
+| Balanced binary tree | 3 |
+| Left-skewed binary tree | 3 |
+| Single-node tree | 1 |
+| Empty tree | 0 |
+
+### Lowest Common Ancestor Tests
+
+| Test Case | Expected Result |
+|---|---|
+| Standard case: nodes 2 and 8 | 6 |
+| Deep nodes: nodes 3 and 5 | 4 |
+| One node is an ancestor: nodes 2 and 4 | 2 |
+
+### Running All Tests
+
+```bash
+python binary_tree_tests.py
+```
+
+### Running Individual Test Methods
+
+Test maximum depth:
+
+```bash
+python -m unittest binary_tree_tests.TestBinaryTreeFunctions.test_max_depth -v
+```
+
+Test lowest common ancestor:
+
+```bash
+python -m unittest binary_tree_tests.TestBinaryTreeFunctions.test_lowest_common_ancestor -v
+```
+
+### Test Results
+
+Both test methods pass successfully, covering all seven scenarios.
+
+```text
+Ran 2 tests in ...s
+
+OK
+```
+
+## Screenshots
+
+### Successful Test Suite
+
+The following screenshot demonstrates successful execution of the provided unit tests.
+
+![Successful Test Suite](screenshot/test_suite.png)
+
+## Time and Space Complexity
+
+Big O notation describes how an algorithm's execution time and memory requirements scale with input size.
+
+### Maximum Depth
+
+**Time Complexity: O(n)**
+
+- Every node in the binary tree is visited once
+- The algorithm calculates the depth of both subtrees recursively
+- Execution time increases linearly with the number of nodes
+
+**Space Complexity: O(h)**
+
+- Recursive calls use memory on the call stack
+- The maximum recursion depth depends on the height of the tree
+- A balanced tree requires O(log n) stack space
+- A skewed tree requires O(n) stack space
+
+### Lowest Common Ancestor
+
+**Time Complexity: O(h)**
+
+- The algorithm follows one path through the BST
+- It does not need to visit every node
+- A balanced BST requires O(log n) time
+- A skewed BST may require O(n) time
+
+**Space Complexity: O(h)**
+
+- Recursive calls use memory on the call stack
+- A balanced BST requires O(log n) stack space
+- A skewed BST may require O(n) stack space
+
+### Complexity Summary
+
+| Algorithm | Time Complexity | Space Complexity |
+|---|---|---|
+| Maximum Depth | O(n) | O(h) |
+| Lowest Common Ancestor | O(h) | O(h) |
+
+Where:
+
+- `n` represents the total number of nodes
+- `h` represents the height of the tree
+
+## Key Takeaways
+
+- Recursion provides a straightforward approach to traversing binary trees
+- Base cases prevent recursive functions from running indefinitely
+- Maximum depth requires evaluating both subtrees
+- Binary Search Tree properties allow more efficient navigation
+- The lowest common ancestor is identified when target nodes diverge or the current node matches a target
+- Tree balance significantly affects recursive time and space complexity
+
+## Author
+
+Created by Matthew Swanberg as part of Course 10 Module 7 (Lab: Binary Trees– Depth and Ancestors)
